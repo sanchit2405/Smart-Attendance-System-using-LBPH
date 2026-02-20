@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Student{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/register_student.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="topbar">
+        <a href="/admin_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+        <h3>Register Student</h3>
+        <div style="width:36px"></div>
+    </div>
+
+    <div class="container">
+
+        <div class="form-icon">
+            <span class="material-icons-round">person_add</span>
+        </div>
+        <h2>New Student</h2>
+        <p class="subtitle">Fill in all the details below</p>
+
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
+
+        <form method="POST" action="/register">
+
+            <div class="input-group">
+                <span class="material-icons-round">person</span>
+                <input type="text" name="name" placeholder="Full Name" required>
+            </div>
+
+            <div class="input-group">
+                <span class="material-icons-round">email</span>
+                <input type="email" name="email" placeholder="Email Address" required>
+            </div>
+
+            <div class="input-group">
+                <span class="material-icons-round">lock</span>
+                <input type="password" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="input-group">
+                <span class="material-icons-round">badge</span>
+                <input type="text" name="roll_number" placeholder="Roll Number" required>
+            </div>
+
+            <div class="input-group">
+                <span class="material-icons-round">school</span>
+                <input type="text" name="department" placeholder="Department" required>
+            </div>
+
+            <button type="submit">
+                <span class="material-icons-round">how_to_reg</span>
+                Register Student
+            </button>
+
+        </form>
+
+    </div>
+
+{% endblock %}

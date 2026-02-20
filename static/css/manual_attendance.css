@@ -1,0 +1,148 @@
+body {
+    margin: 0;
+    background: #111827;
+    font-family: Arial;
+}
+
+.topbar {
+    background: #2563eb;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h3 {
+    margin: 0;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    background: #f3f4f6;
+    max-width: 420px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.flash-msg {
+    background: #d1fae5;
+    color: #059669;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+/* ── Form Card ── */
+.form-card {
+    background: white;
+    border-radius: 16px;
+    padding: 20px;
+}
+
+.form-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.form-icon {
+    width: 48px;
+    height: 48px;
+    background: #dbeafe;
+    color: #2563eb;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.form-icon .material-icons-round {
+    font-size: 26px;
+}
+
+.form-header h3 {
+    margin: 0 0 2px;
+    font-size: 16px;
+    color: #111827;
+}
+
+.form-header p {
+    margin: 0;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* ── Input Groups ── */
+.input-group {
+    margin-bottom: 16px;
+}
+
+.input-group label {
+    display: block;
+    font-size: 13px;
+    color: #374151;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+.input-group select,
+.input-group input {
+    width: 100%;
+    padding: 12px 14px;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    font-size: 14px;
+    color: #111827;
+    background: #f9fafb;
+    outline: none;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.input-group select:focus,
+.input-group input:focus {
+    border-color: #2563eb;
+}
+
+/* ── Submit Button ── */
+.submit-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: opacity 0.2s;
+    margin-top: 8px;
+}
+
+.submit-btn:hover {
+    opacity: 0.9;
+}
+
+.submit-btn .material-icons-round {
+    font-size: 22px;
+}

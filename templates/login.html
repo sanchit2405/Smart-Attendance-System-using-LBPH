@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block title %}Smart Attendance - Login{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/login.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="login-container">
+
+<div class="icon-box">👤</div>
+<h2>SMART ATTENDANCE</h2>
+
+<form method="POST" action="/login">
+
+{% if error %}
+<p class="error">{{ error }}</p>
+{% endif %}
+
+<input type="email" name="email" placeholder="Email" required>
+<input type="password" name="password" placeholder="Password" required>
+
+<div class="role">
+<label><input type="radio" name="role" value="student" checked> Student</label>
+<label><input type="radio" name="role" value="admin"> Admin</label>
+</div>
+
+<button type="submit">LOGIN</button>
+<p class="forgot">Forgot Password?</p>
+
+</form>
+
+</div>
+{% endblock %}

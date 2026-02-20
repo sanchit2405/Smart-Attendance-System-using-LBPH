@@ -1,0 +1,138 @@
+body {
+    margin: 0;
+    background: #111827;
+    font-family: Arial;
+}
+
+.topbar {
+    background: #2563eb;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h3 {
+    margin: 0;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    background: #f3f4f6;
+    max-width: 420px;
+    margin: 20px auto;
+    padding: 25px 20px;
+    border-radius: 20px;
+    text-align: center;
+}
+
+.form-icon {
+    width: 60px;
+    height: 60px;
+    background: #ede9fe;
+    color: #7c3aed;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 10px;
+}
+
+.form-icon .material-icons-round {
+    font-size: 30px;
+}
+
+h2 {
+    margin: 0 0 4px;
+    color: #111827;
+}
+
+.subtitle {
+    color: #9ca3af;
+    font-size: 13px;
+    margin: 0 0 20px;
+}
+
+.error {
+    background: #fee2e2;
+    color: #dc2626;
+    padding: 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+form {
+    text-align: left;
+}
+
+.input-group {
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 0 14px;
+    margin-bottom: 12px;
+    border: 2px solid transparent;
+    transition: border-color 0.2s;
+}
+
+.input-group:focus-within {
+    border-color: #2563eb;
+}
+
+.input-group .material-icons-round {
+    color: #9ca3af;
+    font-size: 20px;
+    margin-right: 10px;
+}
+
+.input-group input {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 14px 0;
+    font-size: 14px;
+    background: transparent;
+    color: #111827;
+}
+
+.input-group input::placeholder {
+    color: #9ca3af;
+}
+
+button {
+    width: 100%;
+    padding: 14px;
+    background: #2563eb;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #1d4ed8;
+}
+
+button .material-icons-round {
+    font-size: 20px;
+}

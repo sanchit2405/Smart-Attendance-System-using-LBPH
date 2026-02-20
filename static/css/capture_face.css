@@ -1,0 +1,392 @@
+body {
+    margin: 0;
+    background: #111827;
+    font-family: Arial;
+}
+
+.topbar {
+    background: #2563eb;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h3 {
+    margin: 0;
+}
+
+.back-btn {
+    background: white;
+    color: #2563eb;
+    padding: 8px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.back-btn .material-icons-round {
+    font-size: 20px;
+}
+
+.container {
+    background: #f3f4f6;
+    max-width: 420px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.flash-msg {
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.flash-msg.success {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.flash-msg.error {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+/* ── Section Header ── */
+.section-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.section-header .material-icons-round {
+    font-size: 22px;
+    color: #2563eb;
+}
+
+.section-header h4 {
+    margin: 0;
+    font-size: 16px;
+    color: #1f2937;
+}
+
+/* ── Camera ── */
+.camera-box {
+    position: relative;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #000;
+    aspect-ratio: 4/3;
+}
+
+.camera-feed {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: opacity 0.15s;
+}
+
+.overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0, 0, 0, 0.6));
+    color: white;
+    text-align: center;
+    padding: 20px 10px 15px;
+    pointer-events: none;
+}
+
+.overlay-icon {
+    font-size: 36px;
+    opacity: 0.7;
+}
+
+.overlay p {
+    margin: 5px 0 0;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+/* ── Progress ── */
+.progress-section {
+    margin: 15px 0;
+}
+
+.progress-info {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.progress-info .material-icons-round {
+    font-size: 18px;
+    color: #6b7280;
+}
+
+.progress-bar {
+    height: 8px;
+    background: #e5e7eb;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2563eb, #7c3aed);
+    border-radius: 8px;
+    transition: width 0.3s ease;
+}
+
+.upload-fill {
+    background: linear-gradient(90deg, #059669, #10b981);
+}
+
+/* ── Capture Button ── */
+.capture-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #2563eb, #7c3aed);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.capture-btn:hover {
+    opacity: 0.9;
+}
+
+.capture-btn:active {
+    transform: scale(0.98);
+}
+
+.capture-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.capture-btn .material-icons-round {
+    font-size: 22px;
+}
+
+/* ── Camera done sub-message ── */
+.camera-done-msg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #d1fae5;
+    border-radius: 12px;
+    color: #065f46;
+    font-weight: bold;
+    font-size: 14px;
+    animation: fadeIn 0.3s ease;
+}
+
+.camera-done-msg .material-icons-round {
+    font-size: 22px;
+    color: #059669;
+}
+
+/* ── Section Divider ── */
+.section-divider {
+    height: 1px;
+    background: #d1d5db;
+    margin: 24px 0;
+}
+
+/* ── Upload Area ── */
+.upload-hint {
+    font-size: 13px;
+    color: #6b7280;
+    margin: 0 0 12px;
+}
+
+.upload-area {
+    margin-bottom: 12px;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 28px 16px;
+    border: 2px dashed #9ca3af;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: border-color 0.2s, background 0.2s;
+}
+
+.upload-label:hover {
+    border-color: #2563eb;
+    background: rgba(37, 99, 235, 0.04);
+}
+
+.upload-icon {
+    font-size: 36px;
+    color: #9ca3af;
+}
+
+.upload-label:hover .upload-icon {
+    color: #2563eb;
+}
+
+.upload-text {
+    font-size: 15px;
+    font-weight: bold;
+    color: #374151;
+}
+
+.upload-subtext {
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+/* ── Upload Button ── */
+.upload-btn {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #059669, #10b981);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    transition: opacity 0.2s, transform 0.1s;
+}
+
+.upload-btn:hover {
+    opacity: 0.9;
+}
+
+.upload-btn:active {
+    transform: scale(0.98);
+}
+
+.upload-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.upload-btn .material-icons-round {
+    font-size: 22px;
+}
+
+/* ── Upload Errors ── */
+.upload-errors {
+    margin-top: 10px;
+}
+
+.upload-error-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    background: #fef3c7;
+    border-radius: 10px;
+    font-size: 13px;
+    color: #92400e;
+    margin-bottom: 6px;
+}
+
+.upload-error-item .material-icons-round {
+    font-size: 18px;
+    color: #d97706;
+}
+
+/* ── Upload done sub-message ── */
+.upload-done-msg {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 16px;
+    background: #d1fae5;
+    border-radius: 12px;
+    color: #065f46;
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 10px;
+    animation: fadeIn 0.3s ease;
+}
+
+.upload-done-msg .material-icons-round {
+    font-size: 22px;
+    color: #059669;
+}
+
+/* ── Final Done Message ── */
+.done-msg {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    padding: 20px;
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    border-radius: 14px;
+    text-align: center;
+    margin-top: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.done-msg .material-icons-round {
+    font-size: 48px;
+    color: #059669;
+}
+
+.done-msg p {
+    margin: 0;
+    color: #065f46;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.back-link {
+    display: inline-block;
+    margin-top: 5px;
+    color: #2563eb;
+    text-decoration: none;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+.back-link:hover {
+    text-decoration: underline;
+}

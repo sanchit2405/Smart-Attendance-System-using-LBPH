@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+
+{% block title %}Edit Student{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/manage_students.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-msg">{{ messages[0] }}</div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="topbar">
+        <a href="/admin/students" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+        <h3>Edit Student</h3>
+        <span></span>
+    </div>
+
+    <div class="container">
+
+        <form method="POST" class="edit-form">
+            <label>Name</label>
+            <input type="text" name="name" value="{{ student.name }}" required>
+
+            <label>Email</label>
+            <input type="email" name="email" value="{{ student.email }}" required>
+
+            <label>Roll Number</label>
+            <input type="text" name="roll_number" value="{{ student.roll_number }}" required>
+
+            <label>Department</label>
+            <input type="text" name="department" value="{{ student.department }}" required>
+
+            <button type="submit" class="save-btn">
+                <span class="material-icons-round">save</span>
+                Save Changes
+            </button>
+        </form>
+
+    </div>
+
+{% endblock %}

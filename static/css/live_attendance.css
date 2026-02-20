@@ -1,0 +1,48 @@
+body{
+    margin:0;
+    background:#111827;
+    font-family:Arial;
+    color:white;
+}
+
+.topbar{
+    background:#2563eb;
+    padding:15px 20px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.stop-btn{
+    background:white;
+    color:#2563eb;
+    padding:6px 14px;
+    border-radius:8px;
+    text-decoration:none;
+    font-weight:bold;
+}
+
+.container{
+    max-width:900px;
+    margin:20px auto;
+    display:flex;
+    flex-direction:column;
+    gap:20px;
+}
+
+.camera-box{
+    background:black;
+    border-radius:15px;
+    overflow:hidden;
+}
+
+.camera-feed{
+    width:100%;
+    border-radius:15px;
+}
+
+.recognized-box{
+    background:#1f2937;
+    padding:15px;
+    border-radius:15px;
+}

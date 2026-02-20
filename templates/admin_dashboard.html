@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/admin.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="flash-msg">{{ messages[0] }}</div>
+    {% endif %}
+    {% endwith %}
+
+    <div class="topbar">
+        <h3>Admin Panel</h3>
+        <a href="/logout" class="logout-btn"><span class="material-icons-round">logout</span></a>
+    </div>
+
+    <div class="container">
+
+        <div class="stats">
+            <a href="/admin/students" class="box">
+                <div class="stat-icon blue"><span class="material-icons-round">groups</span></div>
+                <p>Total Students</p>
+                <h1>{{ total_students }}</h1>
+            </a>
+
+            <a href="/admin/students/today" class="box">
+                <div class="stat-icon green"><span class="material-icons-round">event_available</span></div>
+                <p>Today's Attendance</p>
+                <h1>{{ today_attendance }}</h1>
+            </a>
+        </div>
+
+        <a href="/register" class="card">
+            <div class="card-icon purple"><span class="material-icons-round">person_add</span></div>
+            <div class="card-text">
+                <h3>Register Student</h3>
+                <p>Add new student to system</p>
+            </div>
+        </a>
+
+        <a href="/train" class="card">
+            <div class="card-icon teal"><span class="material-icons-round">model_training</span></div>
+            <div class="card-text">
+                <h3>Train Face Model</h3>
+                <p>Update face recognition model</p>
+            </div>
+        </a>
+        <a href="/live_attendance" class="card">
+            <div class="card-icon red"><span class="material-icons-round">sensor_occupied</span></div>
+            <div class="card-text">
+                <h3>Start Live Attendance</h3>
+                <p>Mark attendance via camera</p>
+            </div>
+        </a>
+
+        <a href="/manual_attendance" class="card">
+            <div class="card-icon blue"><span class="material-icons-round">edit_calendar</span></div>
+            <div class="card-text">
+                <h3>Manual Attendance</h3>
+                <p>Add attendance manually</p>
+            </div>
+        </a>
+
+        <a href="/reports" class="card">
+            <div class="card-icon orange"><span class="material-icons-round">assessment</span></div>
+            <div class="card-text">
+                <h3>View Reports</h3>
+                <p>Check attendance reports</p>
+            </div>
+        </a>
+
+    </div>
+
+{% endblock %}

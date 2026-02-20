@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+
+{% block title %}My Attendance{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/view_attendance.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="topbar">
+        <a href="/student_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+        <h3>My Attendance</h3>
+        <div style="width:36px"></div>
+    </div>
+
+    <div class="container">
+
+        {% if records|length > 0 %}
+        <div class="summary-box">
+            <span class="material-icons-round">event_available</span>
+            <span>{{ records|length }} record(s) found</span>
+        </div>
+
+        <div class="records">
+            {% for r in records %}
+            <div class="record-card">
+                <div class="record-icon">
+                    <span class="material-icons-round">check_circle</span>
+                </div>
+                <div class="record-info">
+                    <h4>{{ r.date }}</h4>
+                    <p>{{ r.time }}</p>
+                </div>
+                <div class="record-status">
+                    <span class="status-badge">{{ r.status }}</span>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-state">
+            <span class="material-icons-round">event_busy</span>
+            <p>No attendance records yet</p>
+        </div>
+        {% endif %}
+
+    </div>
+
+{% endblock %}

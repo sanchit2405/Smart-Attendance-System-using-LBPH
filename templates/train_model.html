@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Train Face Model{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/train_model.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="topbar">
+        <a href="/admin_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+        <h3>Train Face Model</h3>
+        <div style="width:36px"></div>
+    </div>
+
+    <div class="container">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-msg">{{ messages[0] }}</div>
+        {% endif %}
+        {% endwith %}
+
+        <!-- ═══════════ MODEL INFO CARD ═══════════ -->
+        <div class="info-card">
+            <div class="info-header">
+                <div class="info-icon">
+                    <span class="material-icons-round">model_training</span>
+                </div>
+                <div>
+                    <h3>Face Recognition Model</h3>
+                    <p class="subtitle">LBPH Face Recognizer</p>
+                </div>
+            </div>
+
+            <div class="stats-list">
+                <div class="stat-row">
+                    <span>Registered Students</span>
+                    <span class="stat-value">{{ registered_students }}</span>
+                </div>
+                <div class="stat-row">
+                    <span>Total Images</span>
+                    <span class="stat-value">{{ total_images }}</span>
+                </div>
+                <div class="stat-row">
+                    <span>Last Trained</span>
+                    <span class="stat-value">{{ last_trained }}</span>
+                </div>
+                <div class="stat-row">
+                    <span>Model Status</span>
+                    {% if model_exists %}
+                    <span class="stat-value status-ready">Ready ✅</span>
+                    {% else %}
+                    <span class="stat-value status-not-ready">Not Trained ⚠️</span>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════ TRAINING SECTION ═══════════ -->
+        <div class="training-card">
+            <h3>Training Process</h3>
+            <p class="training-desc">Training the model will process all registered student photos and update the face
+                recognition system. <span class="highlight">This may take several minutes.</span></p>
+
+            <button type="button" class="train-btn" id="trainBtn" onclick="startTraining()">
+                <span class="material-icons-round">model_training</span>
+                START TRAINING
+            </button>
+
+            <div class="training-progress" id="trainingProgress" style="display:none">
+                <div class="spinner"></div>
+                <p>Training in progress... Please wait.</p>
+            </div>
+
+            <div class="train-result" id="trainResult" style="display:none"></div>
+        </div>
+
+        <!-- ═══════════ INFO NOTE ═══════════ -->
+        <div class="note-box">
+            <span class="note-label">Note:</span> It's recommended to retrain the model whenever new students are
+            registered or after every 50 new registrations.
+        </div>
+
+    </div>
+
+    <script>
+        async function startTraining() {
+            const btn = document.getElementById('trainBtn');
+            const progress = document.getElementById('trainingProgress');
+            const result = document.getElementById('trainResult');
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons-round">hourglass_top</span> TRAINING...';
+            btn.style.opacity = '0.6';
+            progress.style.display = 'flex';
+            result.style.display = 'none';
+
+            try {
+                const res = await fetch('/train/start', { method: 'POST' });
+                const data = await res.json();
+
+                if (data.error) {
+                    showResult(data.error, false);
+                    resetBtn();
+                    return;
+                }
+
+                // Poll for status
+                const poll = setInterval(async () => {
+                    try {
+                        const statusRes = await fetch('/train/status');
+                        const status = await statusRes.json();
+
+                        if (!status.running) {
+                            clearInterval(poll);
+                            progress.style.display = 'none';
+                            showResult(status.message, status.success);
+                            resetBtn();
+                        }
+                    } catch (e) {
+                        clearInterval(poll);
+                        showResult('Error checking status', false);
+                        resetBtn();
+                    }
+                }, 1000);
+
+            } catch (e) {
+                showResult('Failed to start training. Try again.', false);
+                resetBtn();
+            }
+        }
+
+        function showResult(msg, success) {
+            const result = document.getElementById('trainResult');
+            result.style.display = 'block';
+            result.className = 'train-result ' + (success ? 'success' : 'error');
+            result.textContent = msg;
+        }
+
+        function resetBtn() {
+            const btn = document.getElementById('trainBtn');
+            const progress = document.getElementById('trainingProgress');
+            btn.disabled = false;
+            btn.style.opacity = '1';
+            btn.innerHTML = '<span class="material-icons-round">model_training</span> START TRAINING';
+            progress.style.display = 'none';
+        }
+    </script>
+
+{% endblock %}

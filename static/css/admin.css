@@ -1,0 +1,170 @@
+body {
+    margin: 0;
+    background: #111827;
+    font-family: Arial;
+}
+
+.topbar {
+    background: #2563eb;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h3 {
+    margin: 0;
+}
+
+.logout-btn {
+    background: white;
+    color: #2563eb;
+    padding: 8px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.logout-btn .material-icons-round {
+    font-size: 20px;
+}
+
+.container {
+    background: #f3f4f6;
+    max-width: 420px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.stats {
+    display: flex;
+    gap: 10px;
+}
+
+.box {
+    background: white;
+    flex: 1;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    cursor: pointer;
+    transition: box-shadow 0.2s, transform 0.15s;
+}
+
+.box:hover {
+    box-shadow: 0 4px 14px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.box p {
+    color: #6b7280;
+    font-size: 13px;
+    margin: 8px 0 4px;
+}
+
+.box h1 {
+    margin: 0;
+    font-size: 28px;
+    color: #111827;
+}
+
+.stat-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto;
+}
+
+.stat-icon .material-icons-round {
+    font-size: 22px;
+}
+
+.stat-icon.blue {
+    background: #dbeafe;
+    color: #2563eb;
+}
+
+.stat-icon.green {
+    background: #d1fae5;
+    color: #059669;
+}
+
+.card {
+    background: white;
+    margin-top: 15px;
+    padding: 18px 20px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    text-decoration: none;
+    color: inherit;
+    transition: box-shadow 0.2s;
+}
+
+.card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.card-icon .material-icons-round {
+    font-size: 24px;
+}
+
+.card-icon.purple {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
+.card-icon.teal {
+    background: #ccfbf1;
+    color: #0d9488;
+}
+
+.card-icon.orange {
+    background: #ffedd5;
+    color: #ea580c;
+}
+
+.card-icon.red {
+    background: #fee2e2;
+    color: #dc2626;
+}
+
+.card-text h3 {
+    margin: 0 0 2px;
+    font-size: 15px;
+    color: #111827;
+}
+
+.card-text p {
+    margin: 0;
+    font-size: 12px;
+    color: #9ca3af;
+}
+
+.flash-msg {
+    background: #d1fae5;
+    color: #059669;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+}

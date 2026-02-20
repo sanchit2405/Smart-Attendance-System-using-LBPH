@@ -1,0 +1,245 @@
+{% extends 'base.html' %}
+
+{% block title %}Register Face{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/capture_face.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="topbar">
+        <h3>Register Face</h3>
+        <a href="/student_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+    </div>
+
+    <div class="container">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-msg success">{{ messages[0] }}</div>
+        {% endif %}
+        {% endwith %}
+
+        {% if error %}
+        <div class="flash-msg error">{{ error }}</div>
+        {% endif %}
+
+        <!-- ═══════════ CAMERA CAPTURE SECTION ═══════════ -->
+        <div class="section-header">
+            <span class="material-icons-round">videocam</span>
+            <h4>Camera Capture</h4>
+        </div>
+
+        <div class="camera-box">
+            <img src="{{ url_for('video_feed_capture') }}" class="camera-feed" id="cameraFeed">
+            <div class="overlay" id="overlay">
+                <span class="material-icons-round overlay-icon">face</span>
+                <p>Position your face in the frame</p>
+            </div>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span class="material-icons-round">collections</span>
+                <span id="captureCount">{{ camera_count }}</span> / 15 captured
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill" style="width: {{ (camera_count / 15 * 100)|round }}%">
+                </div>
+            </div>
+        </div>
+
+        <button class="capture-btn" id="captureBtn" onclick="captureFrame()" {% if camera_count>= 15
+            %}style="display:none"{% endif %}>
+            <span class="material-icons-round">camera</span>
+            Capture
+        </button>
+
+        <div class="camera-done-msg" id="cameraDoneMsg" {% if camera_count < 15 %}style="display:none" {% endif %}>
+            <span class="material-icons-round">check_circle</span>
+            <span>Camera capture complete! (15 / 15)</span>
+        </div>
+
+        <!-- ═══════════ DIVIDER ═══════════ -->
+        <div class="section-divider"></div>
+
+        <!-- ═══════════ UPLOAD SECTION ═══════════ -->
+        <div class="section-header">
+            <span class="material-icons-round">cloud_upload</span>
+            <h4>Upload Photos</h4>
+        </div>
+        <p class="upload-hint">Upload up to 10 clear face photos from your device for better recognition.</p>
+
+        <div class="upload-area" id="uploadArea">
+            <label class="upload-label" for="fileInput">
+                <span class="material-icons-round upload-icon">add_photo_alternate</span>
+                <span class="upload-text">Choose images</span>
+                <span class="upload-subtext" id="fileCount">No files selected</span>
+            </label>
+            <input type="file" id="fileInput" accept="image/*" multiple hidden>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-info">
+                <span class="material-icons-round">cloud_done</span>
+                <span id="uploadCount">{{ upload_count }}</span> / 10 uploaded
+            </div>
+            <div class="progress-bar">
+                <div class="progress-fill upload-fill" id="uploadProgressFill"
+                    style="width: {{ (upload_count / 10 * 100)|round }}%"></div>
+            </div>
+        </div>
+
+        <button class="upload-btn" id="uploadBtn" onclick="uploadImages()" disabled {% if upload_count>= 10
+            %}style="display:none"{% endif %}>
+            <span class="material-icons-round">upload</span>
+            Upload Selected
+        </button>
+
+        <div class="upload-errors" id="uploadErrors" style="display:none"></div>
+
+        <div class="upload-done-msg" id="uploadDoneMsg" {% if upload_count < 10 %}style="display:none" {% endif %}>
+            <span class="material-icons-round">check_circle</span>
+            <span>Upload complete! (10 / 10)</span>
+        </div>
+
+        <!-- ═══════════ ALL DONE ═══════════ -->
+        <div class="done-msg" id="doneMsg" {% if camera_count < 15 or upload_count < 10 %}style="display:none" {% endif
+            %}>
+            <span class="material-icons-round">verified</span>
+            <p>All 25 images collected! Face registered successfully.</p>
+            <a href="/student_dashboard" class="back-link">Back to Dashboard</a>
+        </div>
+
+    </div>
+
+    <script>
+        let captureCount = {{ camera_count }};
+        let uploadCount = {{ upload_count }};
+        const maxCaptures = 15;
+        const maxUploads = 10;
+
+        // ── Camera Capture ──
+        async function captureFrame() {
+            if (captureCount >= maxCaptures) return;
+
+            const btn = document.getElementById('captureBtn');
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons-round">hourglass_top</span> Saving...';
+
+            try {
+                const res = await fetch('/save_face', { method: 'POST' });
+                const data = await res.json();
+
+                if (data.error) {
+                    alert(data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-icons-round">camera</span> Capture';
+                    return;
+                }
+
+                captureCount = data.count;
+                document.getElementById('captureCount').textContent = captureCount;
+                document.getElementById('progressFill').style.width = (captureCount / maxCaptures * 100) + '%';
+
+                // Flash effect
+                const cam = document.getElementById('cameraFeed');
+                cam.style.opacity = '0.5';
+                setTimeout(() => cam.style.opacity = '1', 150);
+
+                if (data.done) {
+                    btn.style.display = 'none';
+                    document.getElementById('cameraDoneMsg').style.display = 'flex';
+                    document.getElementById('overlay').style.display = 'none';
+                    checkAllDone();
+                } else {
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-icons-round">camera</span> Capture';
+                }
+            } catch (e) {
+                alert('Error capturing frame. Try again.');
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons-round">camera</span> Capture';
+            }
+        }
+
+        // ── File Upload ──
+        const fileInput = document.getElementById('fileInput');
+        fileInput.addEventListener('change', () => {
+            const remaining = maxUploads - uploadCount;
+            const count = Math.min(fileInput.files.length, remaining);
+            document.getElementById('fileCount').textContent = count + ' file(s) selected';
+            document.getElementById('uploadBtn').disabled = count === 0;
+        });
+
+        async function uploadImages() {
+            const btn = document.getElementById('uploadBtn');
+            const errorsDiv = document.getElementById('uploadErrors');
+            errorsDiv.style.display = 'none';
+            errorsDiv.innerHTML = '';
+
+            if (!fileInput.files.length) return;
+
+            btn.disabled = true;
+            btn.innerHTML = '<span class="material-icons-round">hourglass_top</span> Uploading...';
+
+            const formData = new FormData();
+            const remaining = maxUploads - uploadCount;
+            const limit = Math.min(fileInput.files.length, remaining);
+            for (let i = 0; i < limit; i++) {
+                formData.append('images', fileInput.files[i]);
+            }
+
+            try {
+                const res = await fetch('/upload_faces', { method: 'POST', body: formData });
+                const data = await res.json();
+
+                if (data.error && !data.upload_count && data.upload_count !== 0) {
+                    alert(data.error);
+                    btn.disabled = false;
+                    btn.innerHTML = '<span class="material-icons-round">upload</span> Upload Selected';
+                    return;
+                }
+
+                uploadCount = data.upload_count;
+                document.getElementById('uploadCount').textContent = uploadCount;
+                document.getElementById('uploadProgressFill').style.width = (uploadCount / maxUploads * 100) + '%';
+
+                // Show errors if any
+                if (data.errors && data.errors.length > 0) {
+                    errorsDiv.style.display = 'block';
+                    errorsDiv.innerHTML = data.errors.map(e =>
+                        '<div class="upload-error-item"><span class="material-icons-round">warning</span> ' + e + '</div>'
+                    ).join('');
+                }
+
+                if (data.done) {
+                    btn.style.display = 'none';
+                    document.getElementById('uploadDoneMsg').style.display = 'flex';
+                    document.getElementById('uploadArea').style.display = 'none';
+                    checkAllDone();
+                } else {
+                    // Reset for more uploads
+                    fileInput.value = '';
+                    document.getElementById('fileCount').textContent = 'No files selected';
+                    btn.disabled = true;
+                    btn.innerHTML = '<span class="material-icons-round">upload</span> Upload Selected';
+                }
+            } catch (e) {
+                alert('Upload failed. Try again.');
+                btn.disabled = false;
+                btn.innerHTML = '<span class="material-icons-round">upload</span> Upload Selected';
+            }
+        }
+
+        // ── Check if everything is done ──
+        function checkAllDone() {
+            if (captureCount >= maxCaptures && uploadCount >= maxUploads) {
+                document.getElementById('doneMsg').style.display = 'flex';
+            }
+        }
+    </script>
+
+{% endblock %}

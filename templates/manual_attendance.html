@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+
+{% block title %}Manual Attendance{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/manual_attendance.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+    <div class="topbar">
+        <a href="/admin_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+        <h3>Manual Attendance</h3>
+        <div style="width:36px"></div>
+    </div>
+
+    <div class="container">
+
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="flash-msg">{{ messages[0] }}</div>
+        {% endif %}
+        {% endwith %}
+
+        <div class="form-card">
+            <div class="form-header">
+                <div class="form-icon">
+                    <span class="material-icons-round">edit_calendar</span>
+                </div>
+                <div>
+                    <h3>Mark Attendance</h3>
+                    <p>Manually add a student's attendance</p>
+                </div>
+            </div>
+
+            <form method="POST" action="/manual_attendance">
+
+                <div class="input-group">
+                    <label>Student</label>
+                    <select name="student_id" required>
+                        <option value="">-- Select Student --</option>
+                        {% for s in students %}
+                        <option value="{{ s.id }}">{{ s.name }} ({{ s.roll_number }} · {{ s.department }})</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Date</label>
+                    <input type="date" name="date" required>
+                </div>
+
+                <div class="input-group">
+                    <label>Time (optional)</label>
+                    <input type="time" name="time">
+                </div>
+
+                <div class="input-group">
+                    <label>Status</label>
+                    <select name="status">
+                        <option value="Present">Present</option>
+                        <option value="Late">Late</option>
+                        <option value="Absent">Absent</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <span class="material-icons-round">check_circle</span>
+                    MARK ATTENDANCE
+                </button>
+            </form>
+        </div>
+
+    </div>
+
+{% endblock %}

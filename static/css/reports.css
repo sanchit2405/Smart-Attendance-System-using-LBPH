@@ -1,0 +1,177 @@
+body {
+    margin: 0;
+    background: #111827;
+    font-family: Arial;
+}
+
+.topbar {
+    background: #2563eb;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.topbar h3 {
+    margin: 0;
+}
+
+.back-btn {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    padding: 6px;
+    border-radius: 10px;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+}
+
+.container {
+    background: #f3f4f6;
+    max-width: 420px;
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 20px;
+}
+
+.filter-bar {
+    background: white;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    padding: 10px 14px;
+    margin-bottom: 15px;
+    gap: 10px;
+}
+
+.filter-bar .material-icons-round {
+    color: #2563eb;
+    font-size: 22px;
+}
+
+.filter-bar input {
+    flex: 1;
+    border: none;
+    outline: none;
+    font-size: 14px;
+    color: #111827;
+    background: transparent;
+    cursor: pointer;
+}
+
+.record-card {
+    background: white;
+    border-radius: 14px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.record-icon {
+    width: 42px;
+    height: 42px;
+    background: #dbeafe;
+    color: #2563eb;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+.record-icon .material-icons-round {
+    font-size: 22px;
+}
+
+.record-info {
+    flex: 1;
+}
+
+.record-info h4 {
+    margin: 0 0 2px;
+    font-size: 14px;
+    color: #111827;
+}
+
+.record-info p {
+    margin: 0;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.record-time {
+    text-align: right;
+}
+
+.status-badge {
+    background: #d1fae5;
+    color: #059669;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: bold;
+}
+
+.time {
+    margin: 4px 0 0;
+    font-size: 11px;
+    color: #9ca3af;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: #9ca3af;
+}
+
+.empty-state .material-icons-round {
+    font-size: 48px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.empty-state p {
+    font-size: 14px;
+    margin: 0;
+}
+
+.flash-msg {
+    background: #d1fae5;
+    color: #059669;
+    text-align: center;
+    padding: 12px;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 12px;
+    margin-bottom: 15px;
+}
+
+.delete-form {
+    margin: 0;
+    flex-shrink: 0;
+}
+
+.delete-btn {
+    width: 34px;
+    height: 34px;
+    background: #fee2e2;
+    color: #dc2626;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.2s;
+}
+
+.delete-btn:hover {
+    background: #fecaca;
+}
+
+.delete-btn .material-icons-round {
+    font-size: 18px;
+}

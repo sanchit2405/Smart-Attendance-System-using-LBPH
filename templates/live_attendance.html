@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+
+{% block title %}Live Attendance{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/live_attendance.css">
+{% endblock %}
+
+{% block content %}
+
+<div class="topbar">
+<h3>Live Attendance Session</h3>
+<a href="/admin_dashboard" class="stop-btn">Stop Session</a>
+</div>
+
+<div class="container">
+
+<div class="camera-box">
+<img src="{{ url_for('video_feed') }}" class="camera-feed"> 
+</div>
+
+<div class="recognized-box">
+<h4>Recognized Students <span id="refresh-indicator" style="font-size:12px; color:#aaa;">● live</span></h4>
+<ul id="recognized-list">
+<li>Waiting for detection...</li>
+</ul>
+</div>
+
+</div>
+
+<script>
+  function fetchRecognized() {
+    fetch('/recognized_today')
+      .then(res => res.json())
+      .then(data => {
+        const list = document.getElementById('recognized-list');
+        if (data.length === 0) {
+          list.innerHTML = '<li>Waiting for detection...</li>';
+        } else {
+          list.innerHTML = data.map(s =>
+            `<li><strong>${s.name}</strong> — ${s.roll_number} &nbsp;<span style="color:#aaa;font-size:12px;">${s.time}</span></li>`
+          ).join('');
+        }
+      })
+      .catch(() => {});
+  }
+
+  // Refresh recognized list every 3 seconds automatically
+  fetchRecognized();
+  setInterval(fetchRecognized, 3000);
+</script>
+
+{% endblock %}
