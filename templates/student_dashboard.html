@@ -39,29 +39,31 @@
         </a>
 
         <!-- ═══════════ TODAY'S STATUS ═══════════ -->
-        <div class="status-card {% if today_status %}present{% else %}pending{% endif %}">
+        <div class="status-card {% if today_status == 'Present' %}present{% elif today_status == 'Absent' %}absent{% else %}pending{% endif %}">
             <div class="status-card-header">
-                <div class="status-icon {% if today_status %}present{% else %}pending{% endif %}">
+                <div class="status-icon {% if today_status == 'Present' %}present{% elif today_status == 'Absent' %}absent{% else %}pending{% endif %}">
                     <span class="material-icons-round">
-                        {% if today_status %}check_circle{% else %}schedule{% endif %}
+                        {% if today_status == 'Present' %}check_circle{% elif today_status == 'Absent' %}cancel{% else %}schedule{% endif %}
                     </span>
                 </div>
                 <div class="status-text">
                     <h3>Today's Attendance</h3>
-                    {% if today_status %}
-                    <p class="status-detail present">{{ today_status }} — Marked at {{ today_time }}</p>
+                    {% if today_status == 'Present' %}
+                    <p class="status-detail present">Present — Marked at {{ today_time }}</p>
+                    {% elif today_status == 'Absent' %}
+                    <p class="status-detail absent">Absent</p>
                     {% else %}
                     <p class="status-detail pending">Not yet marked</p>
                     {% endif %}
                 </div>
             </div>
             <div class="status-footer">
-                {% if today_status %}
-                <span class="status-pill present"><span class="material-icons-round">verified</span> Verified via
-                    camera</span>
+                {% if today_status == 'Present' %}
+                <span class="status-pill present"><span class="material-icons-round">verified</span> Verified via camera</span>
+                {% elif today_status == 'Absent' %}
+                <span class="status-pill absent"><span class="material-icons-round">close</span> Absent</span>
                 {% else %}
-                <span class="status-pill pending"><span class="material-icons-round">videocam</span> Marked via
-                    classroom camera</span>
+                <span class="status-pill pending"><span class="material-icons-round">videocam</span> Marked via classroom camera</span>
                 {% endif %}
             </div>
         </div>

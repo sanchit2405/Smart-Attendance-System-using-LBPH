@@ -52,7 +52,7 @@
                 {% if mode == 'today' %}
                 <div class="detail-row attendance-time">
                     <span class="material-icons-round small-icon">schedule</span>
-                    <span>{{ s.time }} — {{ s.status }}</span>
+                    <span>{{ s.time }} — <span class="status-badge {% if s.status == 'Present' %}status-present{% else %}status-absent{% endif %}">{{ s.status }}</span></span>
                 </div>
                 {% endif %}
             </div>

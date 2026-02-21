@@ -1083,15 +1083,7 @@ def manual_attendance():
         ).fetchone()
 
         if existing:
-            conn.close()
             flash("Attendance already exists for this student on this date ⚠️")
-            students = conn.execute('''
-                SELECT s.id, u.name, s.roll_number, s.department
-                FROM students s JOIN users u ON s.user_id = u.id
-                ORDER BY u.name
-            ''').fetchall()
-            # re-fetch since we closed
-            conn = get_db()
             students = conn.execute('''
                 SELECT s.id, u.name, s.roll_number, s.department
                 FROM students s JOIN users u ON s.user_id = u.id
@@ -1275,4 +1267,4 @@ def delete_student(student_id):
 # RUN APP
 # ══════════════════════════════
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, use_reloader=False)
