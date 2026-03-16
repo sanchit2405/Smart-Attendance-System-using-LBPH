@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Dashboard{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/admin.css">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+    /* Custom additions for live list and session specific UI */
+    .live-list-box {
+        background: white;
+        margin-top: 15px;
+        padding: 20px;
+        border-radius: 15px;
+        max-width: 100%;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .live-list-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+
+    .live-badge {
+        background: #059669;
+        color: white;
+        padding: 4px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% {
+            opacity: 1;
+        }
+
+        50% {
+            opacity: 0.6;
+        }
+
+        100% {
+            opacity: 1;
+        }
+    }
+
+    .student-item {
+        display: flex;
+        justify-content: space-between;
+        padding: 12px 0;
+        border-bottom: 1px solid #f3f4f6;
+    }
+
+    .student-item:last-child {
+        border-bottom: none;
+    }
+
+    .student-item strong {
+        color: #111827;
+        font-size: 14px;
+    }
+
+    .student-item small {
+        color: #6b7280;
+    }
+
+    .student-item .time {
+        color: #059669;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    /* Centered Welcome text like admin panel might have but customized for faculty */
+    .welcome-section {
+        margin-bottom: 20px;
+    }
+
+    .welcome-section h2 {
+        margin: 0;
+        font-size: 22px;
+        color: #111827;
+    }
+
+    .welcome-section p.subject {
+        margin: 5px 0 0;
+        color: #6b7280;
+        font-size: 14px;
+        font-weight: 500;
+    }
+
+    /* ── Big camera + dark student list (active session) ── */
+    .live-camera-section {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        margin-top: 4px;
+    }
+
+    .camera-card-big {
+        background: #000;
+        border-radius: 16px;
+        overflow: hidden;
+        box-shadow: 0 4px 24px rgba(0, 0, 0, 0.22);
+        width: 100%;
+        line-height: 0;
+    }
+
+    .camera-card-big img {
+        width: 100%;
+        height: auto;
+        display: block;
+    }
+
+    .recognized-card {
+        background: #1f2937;
+        border-radius: 15px;
+        padding: 18px 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    }
+
+    .recognized-card h4 {
+        margin: 0 0 12px 0;
+        color: #f3f4f6;
+        font-size: 15px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .live-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: #10b981;
+        animation: pulse 2s infinite;
+    }
+
+    .rec-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid #374151;
+    }
+
+    .rec-item:last-child {
+        border-bottom: none;
+    }
+
+    .rec-name {
+        color: #f9fafb;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .rec-roll {
+        color: #9ca3af;
+        font-size: 12px;
+        margin-top: 2px;
+    }
+
+    .rec-time {
+        color: #10b981;
+        font-size: 13px;
+        font-weight: 600;
+        white-space: nowrap;
+    }
+
+    .rec-empty {
+        text-align: center;
+        color: #6b7280;
+        padding: 20px 0;
+        font-size: 13px;
+        margin: 0;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="topbar">
+    <h3>Faculty Panel</h3>
+    <a href="/logout" class="logout-btn"><span class="material-icons-round">logout</span></a>
+</div>
+
+<div class="container">
+    <div class="welcome-section">
+        <h2>Hello, {{ session['name'] }}</h2>
+        <p class="subject">Teaching: <strong>{{ faculty['subject'] }}</strong> ({{ faculty['department'] }})</p>
+    </div>
+
+    <div class="stats">
+        <a href="/faculty/present_today" class="box" style="flex: 2; text-decoration: none;">
+            <div class="stat-icon green"><span class="material-icons-round">how_to_reg</span></div>
+            <p>Present Today (In Current Session)</p>
+            <h1 id="presentCount">{{ today_presence }}</h1>
+        </a>
+    </div>
+
+    {% if active_session %}
+    <!-- ── Big camera + live list ── -->
+    <div class="live-camera-section">
+
+        <div class="camera-card-big">
+            <img src="{{ url_for('video_feed') }}" alt="Live Camera Feed">
+        </div>
+
+        <div class="recognized-card">
+            <h4>
+                <span class="live-dot"></span>
+                Live Attendance
+                <span style="font-size:11px;color:#6b7280;margin-left:4px;">● auto-refreshes</span>
+            </h4>
+            <div id="studentList">
+                <p class="rec-empty">Waiting for detections...</p>
+            </div>
+        </div>
+
+    </div>
+
+    <a href="#" id="stopBtn" class="card">
+        <div class="card-icon red"><span class="material-icons-round">stop_circle</span></div>
+        <div class="card-text">
+            <h3>End Current Session</h3>
+            <p>Started at {{ active_session['start_time'] }}</p>
+        </div>
+    </a>
+
+    {% else %}
+    <a href="#" id="startBtn" class="card">
+        <div class="card-icon purple"><span class="material-icons-round">play_circle_filled</span></div>
+        <div class="card-text">
+            <h3>Start Attendance Session</h3>
+            <p>Click to begin marking student attendance</p>
+        </div>
+    </a>
+    {% endif %}
+
+    <a href="/train" class="card">
+        <div class="card-icon teal"><span class="material-icons-round">model_training</span></div>
+        <div class="card-text">
+            <h3>Train Face Model</h3>
+            <p>Update face recognition model</p>
+        </div>
+    </a>
+
+    <a href="/reports" class="card">
+        <div class="card-icon orange"><span class="material-icons-round">auto_graph</span></div>
+        <div class="card-text">
+            <h3>View Subject Reports</h3>
+            <p>Check historical attendance data</p>
+        </div>
+    </a>
+
+    <a href="/manual_attendance" class="card">
+        <div class="card-icon green"><span class="material-icons-round">edit_calendar</span></div>
+        <div class="card-text">
+            <h3>Manual Attendance</h3>
+            <p>Mark attendance manually for a student</p>
+        </div>
+    </a>
+
+    <a href="/profile" class="card">
+        <div class="card-icon teal"><span class="material-icons-round">manage_accounts</span></div>
+        <div class="card-text">
+            <h3>Account Settings</h3>
+            <p>Manage your profile and password</p>
+        </div>
+    </a>
+
+</div>
+
+<script>
+    const startBtn = document.getElementById('startBtn');
+    const stopBtn = document.getElementById('stopBtn');
+    const studentList = document.getElementById('studentList');
+
+    if (startBtn) {
+        startBtn.onclick = async () => {
+            const res = await fetch('/start_session', { method: 'POST' });
+            if (res.ok) {
+                const data = await res.json();
+                window.location.href = data.redirect || '/faculty_live';
+            }
+        };
+    }
+
+    if (stopBtn) {
+        stopBtn.onclick = async () => {
+            const res = await fetch('/stop_session', { method: 'POST' });
+            if (res.ok) location.reload();
+        };
+    }
+
+    async function updateLiveList() {
+        if (!studentList) return;
+        try {
+            const res = await fetch('/recognized_today?_=' + Date.now());
+            if (!res.ok) return;
+            const data = await res.json();
+
+            const countEl = document.getElementById('presentCount');
+            if (countEl) countEl.textContent = data.length;
+
+            if (data.length > 0) {
+                studentList.innerHTML = data.map(s => `
+                    <div class="rec-item">
+                        <div>
+                            <div class="rec-name">${s.name}</div>
+                            <div class="rec-roll">${s.roll_number}</div>
+                        </div>
+                        <div class="rec-time">${s.time}</div>
+                    </div>
+                `).join('');
+            } else {
+                studentList.innerHTML = '<p class="rec-empty">No students detected yet.</p>';
+            }
+        } catch (err) {
+            console.error('Polling error:', err);
+        }
+    }
+
+    setInterval(updateLiveList, 1500);
+    updateLiveList();
+</script>
+
+{% endblock %}

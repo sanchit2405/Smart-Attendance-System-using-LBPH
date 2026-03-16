@@ -72,3 +72,50 @@ button {
     color: #2563eb;
     text-decoration: underline;
 }
+
+.register-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 18px 0 14px;
+    color: #9ca3af;
+    font-size: 12px;
+}
+
+.register-divider::before,
+.register-divider::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: #e5e7eb;
+}
+
+.register-link {
+    display: block;
+    width: 100%;
+    text-align: center;
+    padding: 11px;
+    background: #ecfdf5;
+    border: 1.5px solid #6ee7b7;
+    border-radius: 8px;
+    color: #065f46;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: background 0.2s, border-color 0.2s;
+}
+
+.register-link:hover {
+    background: #d1fae5;
+    border-color: #34d399;
+}
+
+.success-msg {
+    color: #059669;
+    background: #ecfdf5;
+    border-radius: 8px;
+    padding: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    margin-bottom: 12px;
+}

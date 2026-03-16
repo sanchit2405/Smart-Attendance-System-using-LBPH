@@ -1,0 +1,239 @@
+{% extends 'base.html' %}
+
+{% block title %}Student Registration — Smart Attendance{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_self_register.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+<div class="reg-page">
+
+    <div class="reg-card">
+
+        <!-- Header -->
+        <div class="reg-header">
+            <div class="reg-icon-wrap">
+                <span class="material-icons-round">school</span>
+            </div>
+            <h1>Student Registration</h1>
+            <p>SRM Institute of Science and Technology</p>
+        </div>
+
+        <!-- Flash / Error Messages -->
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <div class="alert alert-success">
+            <span class="material-icons-round">check_circle</span>
+            {{ messages[0] }}
+        </div>
+        {% endif %}
+        {% endwith %}
+
+        {% if error %}
+        <div class="alert alert-error">
+            <span class="material-icons-round">error</span>
+            {{ error }}
+        </div>
+        {% endif %}
+
+        <!-- Registration Form -->
+        <form method="POST" action="/student-register" id="regForm" novalidate>
+
+            <div class="input-row two-col">
+                <!-- Full Name -->
+                <div class="field-group">
+                    <label>Full Name</label>
+                    <div class="input-wrap" id="wrap-name">
+                        <span class="material-icons-round field-icon">person</span>
+                        <input type="text" name="full_name" id="full_name" placeholder="e.g. Rajesh Kumar"
+                            value="{{ full_name or '' }}" required autocomplete="name">
+                    </div>
+                    <span class="field-err" id="err-name"></span>
+                </div>
+
+                <!-- Registration Number -->
+                <div class="field-group">
+                    <label>Registration Number</label>
+                    <div class="input-wrap" id="wrap-reg">
+                        <span class="material-icons-round field-icon">badge</span>
+                        <input type="text" name="reg_number" id="reg_number" placeholder="e.g. RA2211003010001"
+                            value="{{ reg_number or '' }}" required autocomplete="off">
+                    </div>
+                    <span class="field-err" id="err-reg"></span>
+                </div>
+            </div>
+
+            <!-- Email -->
+            <div class="field-group">
+                <label>SRM Email Address</label>
+                <div class="input-wrap" id="wrap-email">
+                    <span class="material-icons-round field-icon">email</span>
+                    <input type="email" name="email" id="email" placeholder="name@srmist.edu.in"
+                        value="{{ email or '' }}" required autocomplete="email">
+                    <span class="material-icons-round input-status" id="icon-email"></span>
+                </div>
+                <span class="field-err" id="err-email"></span>
+            </div>
+
+            <!-- Department -->
+            <div class="field-group">
+                <label>Department</label>
+                <div class="input-wrap" id="wrap-dept">
+                    <span class="material-icons-round field-icon">corporate_fare</span>
+                    <select name="department" id="department" required>
+                        <option value="" disabled {% if not department %}selected{% endif %}>Select your department
+                        </option>
+                        {% for dept in ['B.Tech CSE','B.Tech CSE (AI & ML)','B.Tech CSE (Cyber Security)','B.Tech
+                        ECE','B.Tech EEE','B.Tech Mech','B.Tech Civil','B.Tech IT','B.Tech
+                        Biotech','MBA','MCA','M.Tech'] %}
+                        <option value="{{ dept }}" {% if department==dept %}selected{% endif %}>{{ dept }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <span class="field-err" id="err-dept"></span>
+            </div>
+
+            <div class="input-row two-col">
+                <!-- Password -->
+                <div class="field-group">
+                    <label>Password</label>
+                    <div class="input-wrap" id="wrap-pw">
+                        <span class="material-icons-round field-icon">lock</span>
+                        <input type="password" name="password" id="password" placeholder="Create password" required
+                            autocomplete="new-password">
+                        <button type="button" class="eye-btn" onclick="togglePw('password','eye1')">
+                            <span class="material-icons-round" id="eye1">visibility</span>
+                        </button>
+                    </div>
+                    <span class="field-err" id="err-pw"></span>
+                    <!-- Password rules checklist -->
+                    <ul class="pw-rules" id="pwRules">
+                        <li id="rule-len">
+                            <span class="material-icons-round">radio_button_unchecked</span>
+                            At least 8 characters
+                        </li>
+                        <li id="rule-upper">
+                            <span class="material-icons-round">radio_button_unchecked</span>
+                            One uppercase letter
+                        </li>
+                        <li id="rule-digit">
+                            <span class="material-icons-round">radio_button_unchecked</span>
+                            One number
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Confirm Password -->
+                <div class="field-group">
+                    <label>Confirm Password</label>
+                    <div class="input-wrap" id="wrap-cpw">
+                        <span class="material-icons-round field-icon">lock_reset</span>
+                        <input type="password" name="confirm_password" id="confirm_password"
+                            placeholder="Re-enter password" required autocomplete="new-password">
+                        <button type="button" class="eye-btn" onclick="togglePw('confirm_password','eye2')">
+                            <span class="material-icons-round" id="eye2">visibility</span>
+                        </button>
+                    </div>
+                    <span class="field-err" id="err-cpw"></span>
+                </div>
+            </div>
+
+            <!-- Consent note -->
+            <p class="consent-note">
+                <span class="material-icons-round">info</span>
+                By registering, your details will be reviewed by the admin before activation.
+            </p>
+
+            <!-- Buttons -->
+            <div class="btn-row">
+                <a href="/" class="btn-cancel">
+                    <span class="material-icons-round">arrow_back</span>
+                    Cancel
+                </a>
+                <button type="submit" class="btn-submit" id="submitBtn">
+                    <span class="material-icons-round">how_to_reg</span>
+                    Submit Registration
+                </button>
+            </div>
+
+        </form>
+
+    </div>
+</div>
+
+<script>
+    // ── Real-time validation ──
+    const emailEl = document.getElementById('email');
+    const pwEl = document.getElementById('password');
+    const cpwEl = document.getElementById('confirm_password');
+    const nameEl = document.getElementById('full_name');
+    const regEl = document.getElementById('reg_number');
+    const deptEl = document.getElementById('department');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function setStatus(wrapId, ok, errId, msg) {
+        const wrap = document.getElementById(wrapId);
+        const err = document.getElementById(errId);
+        wrap.classList.remove('valid', 'invalid');
+        if (ok === true) wrap.classList.add('valid');
+        if (ok === false) wrap.classList.add('invalid');
+        err.textContent = ok === false ? msg : '';
+    }
+
+    function checkRule(ruleId, ok) {
+        const li = document.getElementById(ruleId);
+        const icon = li.querySelector('.material-icons-round');
+        li.classList.toggle('ok', ok);
+        icon.textContent = ok ? 'check_circle' : 'radio_button_unchecked';
+    }
+
+    function validateEmail() {
+        const v = emailEl.value.trim();
+        if (!v) { setStatus('wrap-email', false, 'err-email', 'Email is required.'); return false; }
+        if (!v.toLowerCase().endsWith('@srmist.edu.in')) {
+            setStatus('wrap-email', false, 'err-email', 'Only @srmist.edu.in email addresses are allowed.');
+            return false;
+        }
+        setStatus('wrap-email', true, 'err-email', '');
+        return true;
+    }
+
+    function validatePassword() {
+        const v = pwEl.value;
+        const lenOk = v.length >= 8;
+        const upperOk = /[A-Z]/.test(v);
+        const digitOk = /\d/.test(v);
+        checkRule('rule-len', lenOk);
+        checkRule('rule-upper', upperOk);
+        checkRule('rule-digit', digitOk);
+        const ok = lenOk && upperOk && digitOk;
+        setStatus('wrap-pw', ok || !v ? (ok ? true : null) : false, 'err-pw', ok ? '' : 'Password does not meet requirements.');
+        return ok;
+    }
+
+    function validateConfirm() {
+        const ok = cpwEl.value === pwEl.value && cpwEl.value !== '';
+        setStatus('wrap-cpw', cpwEl.value ? (ok ? true : false) : null, 'err-cpw', ok ? '' : 'Passwords do not match.');
+        return ok;
+    }
+
+    emailEl.addEventListener('input', validateEmail);
+    emailEl.addEventListener('blur', validateEmail);
+    pwEl.addEventListener('input', () => { validatePassword(); validateConfirm(); });
+    cpwEl.addEventListener('input', validateConfirm);
+    nameEl.addEventListener('blur', () => setStatus('wrap-name', nameEl.value.trim().length > 1, 'err-name', 'Full name is required.'));
+    regEl.addEventListener('blur', () => setStatus('wrap-reg', regEl.value.trim().length > 3, 'err-reg', 'Registration number is required.'));
+    deptEl.addEventListener('change', () => setStatus('wrap-dept', !!deptEl.value, 'err-dept', 'Please select your department.'));
+
+    // Toggle password visibility
+    function togglePw(inputId, iconId) {
+        const inp = document.getElementById(inputId);
+        const icon = document.getElementById(iconId);
+        if (inp.type === 'password') { inp.type = 'text'; icon.textContent = 'visibility_off'; }
+        else { inp.type = 'password'; icon.textContent = 'visibility'; }
+    }
+</script>
+{% endblock %}

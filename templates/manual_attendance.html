@@ -10,7 +10,7 @@
 {% block content %}
 
     <div class="topbar">
-        <a href="/admin_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+        <a href="{% if session['role'] == 'faculty' %}/faculty_dashboard{% else %}/admin_dashboard{% endif %}" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
         <h3>Manual Attendance</h3>
         <div style="width:36px"></div>
     </div>

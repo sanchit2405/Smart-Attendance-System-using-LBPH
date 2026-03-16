@@ -9,27 +9,39 @@
 {% block content %}
 <div class="login-container">
 
-<div class="icon-box">👤</div>
-<h2>SMART ATTENDANCE</h2>
+    <div class="icon-box">👤</div>
+    <h2>SMART ATTENDANCE</h2>
 
-<form method="POST" action="/login">
+    <form method="POST" action="/login">
 
-{% if error %}
-<p class="error">{{ error }}</p>
-{% endif %}
+        {% if error %}
+        <p class="error">{{ error }}</p>
+        {% endif %}
 
-<input type="email" name="email" placeholder="Email" required>
-<input type="password" name="password" placeholder="Password" required>
+        {% with messages = get_flashed_messages() %}
+        {% if messages %}
+        <p class="success-msg">{{ messages[0] }}</p>
+        {% endif %}
+        {% endwith %}
 
-<div class="role">
-<label><input type="radio" name="role" value="student" checked> Student</label>
-<label><input type="radio" name="role" value="admin"> Admin</label>
-</div>
+        <input type="email" name="email" placeholder="Email" required>
+        <input type="password" name="password" placeholder="Password" required>
 
-<button type="submit">LOGIN</button>
-<p class="forgot">Forgot Password?</p>
+        <div class="role">
+            <label><input type="radio" name="role" value="student" checked> Student</label>
+            <label><input type="radio" name="role" value="faculty"> Faculty</label>
+            <label><input type="radio" name="role" value="admin"> Admin</label>
+        </div>
 
-</form>
+        <button type="submit">LOGIN</button>
+        <p class="forgot">Forgot Password?</p>
+
+    </form>
+
+    <div class="register-divider"><span>New Student?</span></div>
+    <a href="/student-register" class="register-link">
+        📝 Student Registration
+    </a>
 
 </div>
 {% endblock %}

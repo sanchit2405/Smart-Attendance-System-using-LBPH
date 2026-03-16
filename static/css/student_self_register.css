@@ -1,0 +1,317 @@
+/* ══════════════════════════════════════════
+   Student Self-Registration CSS
+   Matches project design: dark bg + white card
+   ══════════════════════════════════════════ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Inter', Arial, sans-serif;
+  background: #111827;
+  min-height: 100vh;
+  padding: 24px 16px;
+}
+
+.reg-page {
+  width: 100%;
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+/* ── Card ── */
+.reg-card {
+  background: #fff;
+  border-radius: 24px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.35);
+}
+
+/* ── Header ── */
+.reg-header {
+  background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 60%, #3b82f6 100%);
+  padding: 32px 32px 28px;
+  text-align: center;
+  color: white;
+}
+
+.reg-icon-wrap {
+  width: 64px;
+  height: 64px;
+  background: rgba(255, 255, 255, .18);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  backdrop-filter: blur(8px);
+}
+
+.reg-icon-wrap .material-icons-round {
+  font-size: 34px;
+  color: white;
+}
+
+.reg-header h1 {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 4px;
+}
+
+.reg-header p {
+  font-size: 13px;
+  opacity: .75;
+}
+
+/* ── Form body ── */
+form {
+  padding: 28px 28px 24px;
+}
+
+/* ── Alerts ── */
+.alert {
+  margin: 0 28px 16px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.alert.alert-success {
+  background: #d1fae5;
+  color: #059669;
+}
+
+.alert.alert-error {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+.alert .material-icons-round {
+  font-size: 18px;
+}
+
+/* ── Layout ── */
+.input-row.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* ── Field groups ── */
+.field-group {
+  margin-bottom: 18px;
+}
+
+.field-group label {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #374151;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  margin-bottom: 6px;
+}
+
+/* ── Input wrap ── */
+.input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  background: #f9fafb;
+  border: 1.5px solid #e5e7eb;
+  border-radius: 10px;
+  transition: border-color .2s, box-shadow .2s;
+}
+
+.input-wrap:focus-within {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, .12);
+  background: #fff;
+}
+
+.input-wrap.valid {
+  border-color: #10b981;
+}
+
+.input-wrap.invalid {
+  border-color: #ef4444;
+}
+
+.field-icon {
+  font-size: 18px;
+  color: #9ca3af;
+  padding: 0 10px;
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
+.input-wrap input,
+.input-wrap select {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 11px 4px;
+  font-size: 14px;
+  color: #111827;
+  outline: none;
+  font-family: inherit;
+}
+
+.input-wrap select {
+  cursor: pointer;
+}
+
+.input-status {
+  font-size: 18px;
+  padding-right: 10px;
+  color: #10b981;
+}
+
+.eye-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 10px;
+  color: #9ca3af;
+  display: flex;
+  align-items: center;
+}
+
+.eye-btn .material-icons-round {
+  font-size: 18px;
+}
+
+/* ── Field error ── */
+.field-err {
+  display: block;
+  font-size: 12px;
+  color: #dc2626;
+  margin-top: 4px;
+  min-height: 16px;
+}
+
+/* ── Password rules ── */
+.pw-rules {
+  list-style: none;
+  margin-top: 8px;
+}
+
+.pw-rules li {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: #9ca3af;
+  margin-bottom: 3px;
+  transition: color .2s;
+}
+
+.pw-rules li .material-icons-round {
+  font-size: 14px;
+}
+
+.pw-rules li.ok {
+  color: #10b981;
+}
+
+/* ── Consent note ── */
+.consent-note {
+  font-size: 12px;
+  color: #6b7280;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #f0f9ff;
+  border-left: 3px solid #2563eb;
+  padding: 10px 12px;
+  border-radius: 0 8px 8px 0;
+  margin-bottom: 20px;
+}
+
+.consent-note .material-icons-round {
+  font-size: 16px;
+  color: #2563eb;
+  flex-shrink: 0;
+}
+
+/* ── Buttons ── */
+.btn-row {
+  display: flex;
+  gap: 12px;
+}
+
+.btn-cancel {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: #f3f4f6;
+  color: #374151;
+  font-size: 14px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1.5px solid #e5e7eb;
+  transition: background .2s;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+}
+
+.btn-cancel .material-icons-round {
+  font-size: 18px;
+}
+
+.btn-submit {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #1d4ed8, #2563eb);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: opacity .2s, transform .15s;
+  font-family: inherit;
+}
+
+.btn-submit:hover {
+  opacity: .92;
+  transform: translateY(-1px);
+}
+
+.btn-submit .material-icons-round {
+  font-size: 18px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 520px) {
+  .input-row.two-col {
+    grid-template-columns: 1fr;
+  }
+
+  form {
+    padding: 20px 18px 18px;
+  }
+
+  .alert {
+    margin: 0 18px 14px;
+  }
+}

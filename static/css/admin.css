@@ -97,6 +97,11 @@ body {
     color: #059669;
 }
 
+.stat-icon.purple {
+    background: #ede9fe;
+    color: #7c3aed;
+}
+
 .card {
     background: white;
     margin-top: 15px;
@@ -146,6 +151,27 @@ body {
 .card-icon.red {
     background: #fee2e2;
     color: #dc2626;
+}
+
+.card-icon.amber {
+    background: #fef3c7;
+    color: #d97706;
+}
+
+.pending-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f59e0b;
+    color: white;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 5px;
+    border-radius: 99px;
+    margin-left: 6px;
+    vertical-align: middle;
 }
 
 .card-text h3 {

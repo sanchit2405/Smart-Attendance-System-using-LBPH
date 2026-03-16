@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+
+{% block title %}Registration Requests — Admin{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_registration_requests.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+    .btn-delete {
+        display: inline-flex;
+        align-items: center;
+        gap: 4px;
+        padding: 6px 12px;
+        background: #fff0f0;
+        color: #c0392b;
+        border: 1.5px solid #f5c6c6;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background .15s, border-color .15s;
+        font-family: inherit;
+    }
+    .btn-delete:hover {
+        background: #fde8e8;
+        border-color: #e74c3c;
+    }
+    .btn-delete .material-icons-round {
+        font-size: 16px;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
+
+<!-- Top bar -->
+<div class="topbar">
+    <a href="/admin_dashboard" class="back-btn">
+        <span class="material-icons-round">arrow_back</span>
+    </a>
+    <h3>Registration Requests
+        {% if pending_count > 0 %}
+        <span class="badge-pending">{{ pending_count }}</span>
+        {% endif %}
+    </h3>
+    <div style="width:36px"></div>
+</div>
+
+<div class="page-container">
+
+    <!-- Controls row -->
+    <div class="controls-row">
+        <!-- Search -->
+        <form method="GET" action="/admin/registration-requests" class="search-form" id="searchForm">
+            <div class="search-wrap">
+                <span class="material-icons-round">search</span>
+                <input type="text" name="search" id="searchInput" value="{{ search }}"
+                    placeholder="Search name, email, reg. no., dept…"
+                    oninput="document.getElementById('searchForm').submit()">
+                {% if search %}
+                <a href="/admin/registration-requests" class="clear-btn">
+                    <span class="material-icons-round">close</span>
+                </a>
+                {% endif %}
+            </div>
+
+            <!-- Status filter -->
+            <select name="status" class="filter-select" onchange="this.form.submit()">
+                {% for s in ['All','Pending','Approved','Rejected'] %}
+                <option value="{{ s }}" {% if status_filter==s %}selected{% endif %}>{{ s }}</option>
+                {% endfor %}
+            </select>
+        </form>
+
+        <!-- Approve All button -->
+        {% if pending_count > 0 %}
+        <form method="POST" action="/admin/approve-all-requests" id="approveAllForm">
+            <button type="button" class="btn-approve-all" onclick="confirmApproveAll()">
+                <span class="material-icons-round">done_all</span>
+                Approve All Pending ({{ pending_count }})
+            </button>
+        </form>
+        {% endif %}
+    </div>
+
+    <!-- Stats summary -->
+    <div class="stats-row">
+        <div class="stat-pill pending">
+            <span class="material-icons-round">hourglass_empty</span>
+            Pending: <strong>{{ pending_count }}</strong>
+        </div>
+        <div class="stat-pill total">
+            <span class="material-icons-round">list_alt</span>
+            Showing: <strong>{{ requests|length }}</strong>
+        </div>
+    </div>
+
+    <!-- Table -->
+    {% if requests %}
+    <div class="table-wrap">
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Reg. Number</th>
+                    <th>Email</th>
+                    <th>Department</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for req in requests %}
+                <tr>
+                    <td class="num-cell">{{ loop.index }}</td>
+                    <td>
+                        <div class="name-cell">
+                            <div class="avatar">{{ req.full_name[0].upper() }}</div>
+                            <span>{{ req.full_name }}</span>
+                        </div>
+                    </td>
+                    <td><code>{{ req.reg_number }}</code></td>
+                    <td class="email-cell">{{ req.email }}</td>
+                    <td>{{ req.department }}</td>
+                    <td class="date-cell">{{ req.created_at[:10] }}</td>
+                    <td>
+                        {% if req.status == 'Pending' %}
+                        <span class="badge badge-pending">Pending</span>
+                        {% elif req.status == 'Approved' %}
+                        <span class="badge badge-approved">Approved</span>
+                        {% else %}
+                        <span class="badge badge-rejected">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if req.status == 'Pending' %}
+                        <div class="action-btns">
+                            <form method="POST" action="/admin/approve-request/{{ req.id }}">
+                                <button type="submit" class="btn-approve" title="Approve">
+                                    <span class="material-icons-round">check_circle</span>
+                                    Approve
+                                </button>
+                            </form>
+                            <form method="POST" action="/admin/reject-request/{{ req.id }}"
+                                onsubmit="return confirmReject('{{ req.full_name }}');">
+                                <button type="submit" class="btn-reject" title="Reject">
+                                    <span class="material-icons-round">cancel</span>
+                                    Reject
+                                </button>
+                            </form>
+                            <form method="POST" action="/admin/delete-request/{{ req.id }}"
+                                onsubmit="return confirmDelete('{{ req.full_name }}');">
+                                <button type="submit" class="btn-delete" title="Delete so student can re-register">
+                                    <span class="material-icons-round">delete</span>
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                        {% else %}
+                        <div class="action-btns">
+                            <form method="POST" action="/admin/delete-request/{{ req.id }}"
+                                onsubmit="return confirmDelete('{{ req.full_name }}');">
+                                <button type="submit" class="btn-delete" title="Delete so student can re-register">
+                                    <span class="material-icons-round">delete</span>
+                                    Delete
+                                </button>
+                            </form>
+                        </div>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    {% else %}
+    <!-- Empty state -->
+    <div class="empty-state">
+        <span class="material-icons-round">inbox</span>
+        <h3>No requests found</h3>
+        <p>{% if search %}No results for "<strong>{{ search }}</strong>"{% elif status_filter != 'All' %}No {{
+            status_filter.lower() }} requests{% else %}No student registration requests yet{% endif %}</p>
+        {% if search or status_filter != 'All' %}
+        <a href="/admin/registration-requests" class="clear-filter-btn">Clear filters</a>
+        {% endif %}
+    </div>
+    {% endif %}
+
+</div>
+
+<script>
+    function confirmApproveAll() {
+        const n = { pending_count };
+    if (confirm(`Approve all ${n} pending request(s)? Students will be able to log in immediately.`)) {
+        document.getElementById('approveAllForm').submit();
+    }
+    }
+    function confirmReject(name) {
+        return confirm(`Reject ${name}'s registration request?`);
+    }
+    function confirmDelete(name) {
+        return confirm(`Delete ${name}'s request?\nThis will allow them to re-register with the same email and registration number.`);
+    }
+</script>
+{% endblock %}

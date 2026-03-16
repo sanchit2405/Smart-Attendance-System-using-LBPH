@@ -1,0 +1,344 @@
+{% extends 'base.html' %}
+
+{% block title %}Verify Email — Smart Attendance{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/student_self_register.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<style>
+    .otp-card {
+        max-width: 420px;
+    }
+
+    .otp-header {
+        background: linear-gradient(135deg, #065f46 0%, #059669 100%);
+    }
+
+    .otp-body {
+        padding: 28px 28px 24px;
+        text-align: center;
+    }
+
+    .otp-email-note {
+        background: #f0fdf4;
+        border: 1.5px dashed #34d399;
+        border-radius: 10px;
+        padding: 12px 16px;
+        font-size: 13px;
+        color: #065f46;
+        margin-bottom: 24px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .otp-email-note .material-icons-round {
+        font-size: 18px;
+        color: #059669;
+        flex-shrink: 0;
+    }
+
+    .otp-email-note strong {
+        color: #047857;
+    }
+
+    .otp-input-wrap {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin: 0 0 8px;
+    }
+
+    .otp-input-wrap input {
+        width: 52px;
+        height: 60px;
+        border: 2px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 26px;
+        font-weight: 700;
+        text-align: center;
+        color: #111827;
+        outline: none;
+        transition: border-color .2s, box-shadow .2s;
+        font-family: 'Inter', Arial, sans-serif;
+        caret-color: #2563eb;
+    }
+
+    .otp-input-wrap input:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, .15);
+    }
+
+    .otp-input-wrap.shake {
+        animation: shake .4s ease;
+    }
+
+    @keyframes shake {
+
+        0%,
+        100% {
+            transform: translateX(0)
+        }
+
+        20% {
+            transform: translateX(-6px)
+        }
+
+        40% {
+            transform: translateX(6px)
+        }
+
+        60% {
+            transform: translateX(-4px)
+        }
+
+        80% {
+            transform: translateX(4px)
+        }
+    }
+
+    .otp-hint {
+        font-size: 12px;
+        color: #9ca3af;
+        margin-bottom: 20px;
+    }
+
+    .alert {
+        margin: 0 0 16px;
+        text-align: left;
+    }
+
+    .timer-row {
+        font-size: 13px;
+        color: #6b7280;
+        margin-bottom: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+    }
+
+    .timer-row .material-icons-round {
+        font-size: 16px;
+    }
+
+    #timer {
+        font-weight: 700;
+        color: #2563eb;
+    }
+
+    #timer.expired {
+        color: #dc2626;
+    }
+
+    .otp-btn-row {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .btn-verify {
+        width: 100%;
+        padding: 13px;
+        background: linear-gradient(135deg, #059669, #047857);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 15px;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: inherit;
+        transition: opacity .2s;
+    }
+
+    .btn-verify:hover {
+        opacity: .9;
+    }
+
+    .btn-verify .material-icons-round {
+        font-size: 20px;
+    }
+
+    .btn-resend {
+        background: none;
+        border: 1.5px solid #e5e7eb;
+        border-radius: 10px;
+        padding: 11px;
+        font-size: 13px;
+        color: #6b7280;
+        cursor: pointer;
+        font-family: inherit;
+        transition: border-color .2s, color .2s;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        width: 100%;
+    }
+
+    .btn-resend:hover {
+        border-color: #2563eb;
+        color: #2563eb;
+    }
+
+    .back-link {
+        display: block;
+        margin-top: 16px;
+        font-size: 13px;
+        color: #9ca3af;
+        text-decoration: none;
+        text-align: center;
+    }
+
+    .back-link:hover {
+        color: #2563eb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="reg-page" style="align-items:center; min-height:100vh;">
+    <div class="reg-card otp-card">
+
+        <!-- Header -->
+        <div class="reg-header otp-header">
+            <div class="reg-icon-wrap" style="background:rgba(255,255,255,.2);">
+                <span class="material-icons-round">mark_email_unread</span>
+            </div>
+            <h1>Verify Your Email</h1>
+            <p>Enter the 6-digit OTP sent to your email</p>
+        </div>
+
+        <div class="otp-body">
+
+            <!-- Which email -->
+            <div class="otp-email-note">
+                <span class="material-icons-round">email</span>
+                <span>OTP sent to <strong>{{ email }}</strong></span>
+            </div>
+
+            <!-- Alerts -->
+            {% if error %}
+            <div class="alert alert-error">
+                <span class="material-icons-round">error</span>{{ error }}
+            </div>
+            {% endif %}
+            {% if message %}
+            <div class="alert alert-success">
+                <span class="material-icons-round">info</span>{{ message }}
+            </div>
+            {% endif %}
+
+            <!-- OTP form -->
+            <form method="POST" action="/student-verify-otp" id="otpForm">
+                <input type="hidden" name="otp" id="otpHidden">
+                <!-- Refresh-safe fallback: preserve request identity even without a session -->
+                <input type="hidden" name="request_id" value="{{ request_id or '' }}">
+                <input type="hidden" name="reg_email" value="{{ email or '' }}">
+
+                <div class="otp-input-wrap" id="otpWrap">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" id="d0" autofocus>
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" id="d1">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" id="d2">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" id="d3">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" id="d4">
+                    <input type="text" inputmode="numeric" maxlength="1" class="otp-box" id="d5">
+                </div>
+                <p class="otp-hint">Enter each digit in its own box</p>
+
+                <!-- Countdown timer -->
+                <div class="timer-row">
+                    <span class="material-icons-round">timer</span>
+                    OTP expires in <span id="timer">10:00</span>
+                </div>
+
+                <div class="otp-btn-row">
+                    <button type="submit" class="btn-verify" id="verifyBtn">
+                        <span class="material-icons-round">verified</span>
+                        Verify OTP
+                    </button>
+                </div>
+            </form>
+
+            <!-- Resend form (separate) -->
+            <form method="POST" action="/student-resend-otp" id="resendForm" style="margin-top:10px;">
+                <input type="hidden" name="request_id" value="{{ request_id or '' }}">
+                <input type="hidden" name="reg_email" value="{{ email or '' }}">
+                <button type="submit" class="btn-resend" id="resendBtn" disabled>
+                    <span class="material-icons-round">refresh</span>
+                    Resend OTP
+                </button>
+            </form>
+
+            <a href="/student-register" class="back-link">← Go back and edit details</a>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    // ── OTP box auto-advance ──
+    const boxes = Array.from(document.querySelectorAll('.otp-box'));
+    const hidden = document.getElementById('otpHidden');
+    const otpWrap = document.getElementById('otpWrap');
+
+    boxes.forEach((box, i) => {
+        box.addEventListener('input', e => {
+            const val = e.target.value.replace(/[^0-9]/g, '');
+            box.value = val.slice(-1);
+            if (val && i < 5) boxes[i + 1].focus();
+            updateHidden();
+        });
+
+        box.addEventListener('keydown', e => {
+            if (e.key === 'Backspace' && !box.value && i > 0) {
+                boxes[i - 1].focus();
+                boxes[i - 1].value = '';
+                updateHidden();
+            }
+            if (e.key === 'ArrowLeft' && i > 0) boxes[i - 1].focus();
+            if (e.key === 'ArrowRight' && i < 5) boxes[i + 1].focus();
+        });
+
+        // Handle paste
+        box.addEventListener('paste', e => {
+            e.preventDefault();
+            const pasted = (e.clipboardData || window.clipboardData).getData('text').replace(/[^0-9]/g, '');
+            pasted.split('').slice(0, 6).forEach((ch, idx) => {
+                if (boxes[idx]) boxes[idx].value = ch;
+            });
+            boxes[Math.min(pasted.length, 5)].focus();
+            updateHidden();
+        });
+    });
+
+    function updateHidden() {
+        hidden.value = boxes.map(b => b.value).join('');
+    }
+
+    // ── Countdown timer ──
+    const timerEl = document.getElementById('timer');
+    const resendBtn = document.getElementById('resendBtn');
+    let seconds = 10 * 60;   // 10 minutes
+
+    const interval = setInterval(() => {
+        seconds--;
+        const m = Math.floor(seconds / 60).toString().padStart(2, '0');
+        const s = (seconds % 60).toString().padStart(2, '0');
+        timerEl.textContent = `${m}:${s}`;
+        if (seconds <= 0) {
+            clearInterval(interval);
+            timerEl.textContent = 'Expired';
+            timerEl.classList.add('expired');
+            resendBtn.disabled = false;
+        }
+    }, 1000);
+
+    // Enable resend after 30 seconds even if timer not expired
+    setTimeout(() => { resendBtn.disabled = false; }, 30000);
+</script>
+{% endblock %}

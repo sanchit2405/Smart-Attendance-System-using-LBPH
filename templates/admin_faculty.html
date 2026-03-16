@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+
+{% block title %}Faculty Management — Admin{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/admin_faculty.css') }}">
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+{% endblock %}
+
+{% block content %}
+
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
+
+<!-- Top bar -->
+<div class="topbar">
+    <a href="/admin_dashboard" class="back-btn">
+        <span class="material-icons-round">arrow_back</span>
+    </a>
+    <h3>Faculty Management</h3>
+    <div style="width:36px"></div>
+</div>
+
+<div class="page-wrap">
+
+    <!-- Summary row -->
+    <div class="summary-row">
+        <div class="summary-card">
+            <div class="summary-icon blue">
+                <span class="material-icons-round">badge</span>
+            </div>
+            <div>
+                <p class="summary-label">Total Faculty</p>
+                <p class="summary-value">{{ faculty_list | length }}</p>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="summary-icon green">
+                <span class="material-icons-round">school</span>
+            </div>
+            <div>
+                <p class="summary-label">Departments</p>
+                <p class="summary-value">{{ dept_count }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Controls -->
+    <div class="controls">
+        <div class="search-wrap">
+            <span class="material-icons-round">search</span>
+            <input type="text" id="searchInput" placeholder="Search by name, ID, subject…" oninput="filterCards()">
+        </div>
+        <a href="/admin/register-faculty" class="add-btn">
+            <span class="material-icons-round">person_add</span>
+            Add Faculty
+        </a>
+    </div>
+
+    <!-- Faculty grid -->
+    {% if faculty_list %}
+    <div class="faculty-grid" id="facultyGrid">
+        {% for f in faculty_list %}
+        <div class="fac-card" data-name="{{ f.name|lower }}" data-fid="{{ f.faculty_id|lower }}"
+            data-subject="{{ f.subject|lower }}" data-dept="{{ f.department|lower }}">
+            <div class="fac-header">
+                <div class="fac-avatar">{{ f.name[0] }}</div>
+                <div>
+                    <p class="fac-name">{{ f.name }}</p>
+                    <span class="fac-id">{{ f.faculty_id }}</span>
+                </div>
+            </div>
+            <div class="fac-info">
+                <div class="fac-row">
+                    <span class="material-icons-round">email</span>
+                    {{ f.email }}
+                </div>
+                <div class="fac-row">
+                    <span class="material-icons-round">menu_book</span>
+                    {{ f.subject }}
+                </div>
+                <div class="fac-row">
+                    <span class="material-icons-round">school</span>
+                    {{ f.department }}
+                </div>
+            </div>
+            <div class="fac-actions">
+                <button class="btn-edit" data-uid="{{ f.uid }}" data-name="{{ f.name | replace('"', ' &quot;') }}"
+                    data-fid="{{ f.faculty_id }}" data-email="{{ f.email }}" data-subject="{{ f.subject | replace('"', '
+                    &quot;') }}" data-dept="{{ f.department | replace('"', ' &quot;') }}"
+                    onclick="openEditFromBtn(this)">
+                    <span class="material-icons-round">edit</span> Edit
+                </button>
+                <form method="POST" action="/admin/faculty/delete/{{ f.uid }}"
+                    onsubmit="return confirm('Remove {{ f.name }} from the system?')">
+                    <button type="submit" class="btn-delete">
+                        <span class="material-icons-round">delete</span>
+                    </button>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    {% else %}
+    <div class="empty-state">
+        <span class="material-icons-round">group_off</span>
+        <h3>No faculty registered yet</h3>
+        <p>Add your first faculty member to get started.</p>
+        <a href="/admin/register-faculty">
+            <span class="material-icons-round">person_add</span>
+            Register Faculty
+        </a>
+    </div>
+    {% endif %}
+
+</div>
+
+<!-- Edit Modal -->
+<div class="modal-overlay" id="editModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h2>Edit Faculty</h2>
+            <button class="modal-close" onclick="closeModal()">
+                <span class="material-icons-round">close</span>
+            </button>
+        </div>
+        <form method="POST" action="/admin/faculty/edit" id="editForm">
+            <input type="hidden" name="user_id" id="editUserId">
+
+            <div class="form-group">
+                <label>FULL NAME</label>
+                <div class="input-row">
+                    <span class="material-icons-round">person</span>
+                    <input type="text" name="name" id="editName" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>FACULTY ID</label>
+                <div class="input-row">
+                    <span class="material-icons-round">badge</span>
+                    <input type="text" name="faculty_id" id="editFacultyId" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>EMAIL</label>
+                <div class="input-row">
+                    <span class="material-icons-round">email</span>
+                    <input type="email" name="email" id="editEmail" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>SUBJECT</label>
+                <div class="input-row">
+                    <span class="material-icons-round">menu_book</span>
+                    <input type="text" name="subject" id="editSubject" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>DEPARTMENT</label>
+                <div class="input-row">
+                    <span class="material-icons-round">school</span>
+                    <input type="text" name="department" id="editDepartment" required>
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button type="button" class="btn-cancel" onclick="closeModal()">Cancel</button>
+                <button type="submit" class="btn-save">
+                    <span class="material-icons-round">save</span>
+                    Save Changes
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function openEditFromBtn(btn) {
+        document.getElementById('editUserId').value = btn.dataset.uid;
+        document.getElementById('editName').value = btn.dataset.name;
+        document.getElementById('editFacultyId').value = btn.dataset.fid;
+        document.getElementById('editEmail').value = btn.dataset.email;
+        document.getElementById('editSubject').value = btn.dataset.subject;
+        document.getElementById('editDepartment').value = btn.dataset.dept;
+        document.getElementById('editModal').classList.add('open');
+    }
+    function closeModal() {
+        document.getElementById('editModal').classList.remove('open');
+    }
+    document.getElementById('editModal').addEventListener('click', function (e) {
+        if (e.target === this) closeModal();
+    });
+
+    // Live search filter
+    function filterCards() {
+        const q = document.getElementById('searchInput').value.toLowerCase();
+        document.querySelectorAll('.fac-card').forEach(card => {
+            const match = card.dataset.name.includes(q)
+                || card.dataset.fid.includes(q)
+                || card.dataset.subject.includes(q)
+                || card.dataset.dept.includes(q);
+            card.style.display = match ? '' : 'none';
+        });
+    }
+</script>
+
+{% endblock %}

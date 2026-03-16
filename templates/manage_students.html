@@ -9,76 +9,83 @@
 
 {% block content %}
 
-    {% with messages = get_flashed_messages() %}
-    {% if messages %}
-    <div class="flash-msg">{{ messages[0] }}</div>
-    {% endif %}
-    {% endwith %}
+{% with messages = get_flashed_messages() %}
+{% if messages %}
+<div class="flash-msg">{{ messages[0] }}</div>
+{% endif %}
+{% endwith %}
 
-    <div class="topbar">
-        <a href="/admin_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
-        <h3>{{ title }}</h3>
-        <span></span>
+<div class="topbar">
+    <a href="{% if session['role'] == 'admin' %}/admin_dashboard{% else %}/faculty_dashboard{% endif %}"
+        class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+    <h3>{{ title }}</h3>
+    <span></span>
+</div>
+
+<div class="container">
+
+    {% if students|length == 0 %}
+    <div class="empty-state">
+        <span class="material-icons-round">person_off</span>
+        <p>No students found</p>
     </div>
+    {% endif %}
 
-    <div class="container">
-
-        {% if students|length == 0 %}
-        <div class="empty-state">
-            <span class="material-icons-round">person_off</span>
-            <p>No students found</p>
+    {% for s in students %}
+    <div class="student-card">
+        <div class="student-avatar">
+            <span class="material-icons-round">person</span>
+        </div>
+        <div class="student-info">
+            <h3>{{ s.name }}</h3>
+            <div class="detail-row">
+                <span class="material-icons-round small-icon">badge</span>
+                <span>{{ s.roll_number }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="material-icons-round small-icon">school</span>
+                <span>{{ s.department }}</span>
+            </div>
+            <div class="detail-row">
+                <span class="material-icons-round small-icon">email</span>
+                <span>{{ s.email }}</span>
+            </div>
+            {% if mode == 'today' %}
+            <div class="detail-row attendance-time">
+                <span class="material-icons-round small-icon">schedule</span>
+                <span>{{ s.time }} — <span
+                        class="status-badge {% if s.status == 'Present' %}status-present{% else %}status-absent{% endif %}">{{
+                        s.status }}</span></span>
+            </div>
+            {% endif %}
+        </div>
+        {% if session['role'] == 'admin' or (session['role'] == 'faculty' and mode == 'today') %}
+        <div class="student-actions">
+            {% if session['role'] == 'admin' %}
+            <a href="/admin/edit_student/{{ s.id }}" class="action-btn edit-btn" title="Edit">
+                <span class="material-icons-round">edit</span>
+            </a>
+            {% endif %}
+            {% if mode == 'today' %}
+            <form method="POST" action="/delete_attendance/{{ s.attendance_id }}?from=today"
+                onsubmit="return confirm('Delete this attendance record?');">
+                <button type="submit" class="action-btn delete-btn" title="Delete attendance">
+                    <span class="material-icons-round">delete</span>
+                </button>
+            </form>
+            {% elif session['role'] == 'admin' %}
+            <form action="/admin/delete_student/{{ s.id }}" method="POST"
+                onsubmit="return confirm('Are you sure you want to delete this student? This will remove all their data permanently.');">
+                <button type="submit" class="action-btn delete-btn" title="Delete">
+                    <span class="material-icons-round">delete</span>
+                </button>
+            </form>
+            {% endif %}
         </div>
         {% endif %}
-
-        {% for s in students %}
-        <div class="student-card">
-            <div class="student-avatar">
-                <span class="material-icons-round">person</span>
-            </div>
-            <div class="student-info">
-                <h3>{{ s.name }}</h3>
-                <div class="detail-row">
-                    <span class="material-icons-round small-icon">badge</span>
-                    <span>{{ s.roll_number }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="material-icons-round small-icon">school</span>
-                    <span>{{ s.department }}</span>
-                </div>
-                <div class="detail-row">
-                    <span class="material-icons-round small-icon">email</span>
-                    <span>{{ s.email }}</span>
-                </div>
-                {% if mode == 'today' %}
-                <div class="detail-row attendance-time">
-                    <span class="material-icons-round small-icon">schedule</span>
-                    <span>{{ s.time }} — <span class="status-badge {% if s.status == 'Present' %}status-present{% else %}status-absent{% endif %}">{{ s.status }}</span></span>
-                </div>
-                {% endif %}
-            </div>
-            <div class="student-actions">
-                <a href="/admin/edit_student/{{ s.id }}" class="action-btn edit-btn" title="Edit">
-                    <span class="material-icons-round">edit</span>
-                </a>
-                {% if mode == 'today' %}
-                <form method="POST" action="/delete_attendance/{{ s.attendance_id }}?from=today"
-                    onsubmit="return confirm('Delete this attendance record?');">
-                    <button type="submit" class="action-btn delete-btn" title="Delete attendance">
-                        <span class="material-icons-round">delete</span>
-                    </button>
-                </form>
-                {% else %}
-                <form action="/admin/delete_student/{{ s.id }}" method="POST"
-                    onsubmit="return confirm('Are you sure you want to delete this student? This will remove all their data permanently.');">
-                    <button type="submit" class="action-btn delete-btn" title="Delete">
-                        <span class="material-icons-round">delete</span>
-                    </button>
-                </form>
-                {% endif %}
-            </div>
-        </div>
-        {% endfor %}
-
     </div>
+    {% endfor %}
+
+</div>
 
 {% endblock %}

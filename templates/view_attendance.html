@@ -9,43 +9,50 @@
 
 {% block content %}
 
-    <div class="topbar">
-        <a href="/student_dashboard" class="back-btn"><span class="material-icons-round">arrow_back</span></a>
-        <h3>My Attendance</h3>
-        <div style="width:36px"></div>
+<div class="topbar">
+    <a href="{% if session['role'] == 'admin' %}/admin_dashboard{% elif session['role'] == 'faculty' %}/faculty_dashboard{% else %}/student_dashboard{% endif %}"
+        class="back-btn"><span class="material-icons-round">arrow_back</span></a>
+    <h3>My Attendance</h3>
+    <div style="width:36px"></div>
+</div>
+
+<div class="container">
+
+    {% if records|length > 0 %}
+    <div class="summary-box">
+        <span class="material-icons-round">event_available</span>
+        <span>{{ records|length }} record(s) found</span>
     </div>
 
-    <div class="container">
-
-        {% if records|length > 0 %}
-        <div class="summary-box">
-            <span class="material-icons-round">event_available</span>
-            <span>{{ records|length }} record(s) found</span>
-        </div>
-
-        <div class="records">
-            {% for r in records %}
-            <div class="record-card">
-                <div class="record-icon">
-                    <span class="material-icons-round">check_circle</span>
-                </div>
-                <div class="record-info">
-                    <h4>{{ r.date }}</h4>
-                    <p>{{ r.time }}</p>
-                </div>
-                <div class="record-status">
-                    <span class="status-badge">{{ r.status }}</span>
-                </div>
+    <div class="records">
+        {% for r in records %}
+        <div class="record-card">
+            <div class="record-icon">
+                <span class="material-icons-round">check_circle</span>
             </div>
-            {% endfor %}
+            <div class="record-info">
+                <h4>📚 {{ r.subject }}</h4>
+                <p><b>{{ r.date }}</b></p>
+                <p><b>🕒 {{ r.time }}</b></p>
+                {% if r.subject %}
+                {% endif %}
+                {% if r.teacher_name %}
+                <p>👨‍🏫 <b>{{ r.teacher_name }}</b></p>
+                {% endif %}
+            </div>
+            <div class="record-status">
+                <span class="status-badge">{{ r.status }}</span>
+            </div>
         </div>
-        {% else %}
-        <div class="empty-state">
-            <span class="material-icons-round">event_busy</span>
-            <p>No attendance records yet</p>
-        </div>
-        {% endif %}
-
+        {% endfor %}
     </div>
+    {% else %}
+    <div class="empty-state">
+        <span class="material-icons-round">event_busy</span>
+        <p>No attendance records yet</p>
+    </div>
+    {% endif %}
+
+</div>
 
 {% endblock %}
